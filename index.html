@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#09090b">
+    <meta name="theme-color" content="#555152">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>TaskFlow Pro | Premium</title>
@@ -15,15 +15,15 @@
 
     <style>
         :root {
-            --bg-base: #09090b;
-            --bg-surface: #18181b;
-            --bg-surface-hover: #27272a;
-            --bg-glass: rgba(24, 24, 27, 0.85);
-            --border-color: #27272a;
-            --border-light: rgba(255, 255, 255, 0.05);
-            --text-title: #fafafa;
-            --text-base: #e4e4e7;
-            --text-support: #a1a1aa;
+            --bg-base: #555152;
+            --bg-surface: #35352b;
+            --bg-surface-hover: #3f3e34;
+            --bg-glass: rgba(53, 53, 43, 0.85);
+            --border-color: #5a5850;
+            --border-light: rgba(255, 255, 255, 0.08);
+            --text-title: #ffffff;
+            --text-base: #f2f2f2;
+            --text-support: #c0c0c0;
             --brand-primary: #F97316;
             --brand-glow: rgba(249, 115, 22, 0.5);
             --brand-gradient: linear-gradient(135deg, #FF7F30 0%, #E85D04 100%);
@@ -79,6 +79,7 @@
             font-size: 0.85rem; outline: none; transition: var(--transition);
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); text-overflow: ellipsis;
         }
+        .search-container input::placeholder { color: var(--text-support); opacity: 0.7; }
         .search-container input:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px var(--brand-glow); }
         .search-container i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-support); font-size: 1.1rem; }
         .header-actions { display: flex; gap: 0.5rem; align-items: center; }
@@ -209,6 +210,7 @@
         .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
         .form-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-support); }
         .form-control { background: var(--bg-base); border: 1px solid var(--border-color); color: var(--text-title); padding: 0.8rem 1rem; border-radius: var(--radius-md); font-size: 0.95rem; outline: none; transition: var(--transition); width: 100%; }
+        .form-control::placeholder { color: var(--text-support); opacity: 0.6; }
         .form-control:focus { border-color: var(--brand-primary); box-shadow: 0 0 0 3px var(--brand-glow); }
         textarea.form-control { resize: vertical; min-height: 80px; font-family: inherit; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -415,7 +417,6 @@
         </div>
     </dialog>
 
-    <!-- Diálogo de Modelos para IA -->
     <dialog id="modelDialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -859,7 +860,6 @@ class TaskApp {
         this.closeModal(); this.render();
     }
 
-    /* ---- NOVA FUNCIONALIDADE DE IMPORTAÇÃO ---- */
     importTasksFromFile(file) {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -867,13 +867,9 @@ class TaskApp {
             const ext = file.name.split('.').pop().toLowerCase();
             try {
                 let tasks = [];
-                if (ext === 'json') {
-                    tasks = this.parseJSON(content);
-                } else if (ext === 'csv') {
-                    tasks = this.parseCSV(content);
-                } else {
-                    throw new Error('Formato não suportado.');
-                }
+                if (ext === 'json') tasks = this.parseJSON(content);
+                else if (ext === 'csv') tasks = this.parseCSV(content);
+                else throw new Error('Formato não suportado.');
                 if (tasks.length === 0) {
                     this.showToast('Nenhuma tarefa válida encontrada.', false, 'error');
                 } else {
@@ -1004,7 +1000,6 @@ class TaskApp {
         menuToggle.onclick = (e) => { e.stopPropagation(); mainMenu.classList.toggle('active'); };
         document.addEventListener('click', (e) => { if (!mainMenu.contains(e.target)) mainMenu.classList.remove('active'); });
 
-        // Restaurar Backup (substitui tudo)
         document.getElementById('restoreFileInput').onchange = e => {
             const f = e.target.files[0]; if (!f) return;
             const reader = new FileReader();
@@ -1016,7 +1011,6 @@ class TaskApp {
             reader.readAsText(f); e.target.value = '';
         };
 
-        // Importar Lista (adiciona ao existente)
         document.getElementById('importListBtn').onclick = () => {
             document.getElementById('importListFileInput').click();
             mainMenu.classList.remove('active');
@@ -1027,7 +1021,6 @@ class TaskApp {
             e.target.value = '';
         };
 
-        // Diálogo de modelos
         document.getElementById('downloadModelBtn').onclick = () => {
             document.getElementById('modelDialog').showModal();
             mainMenu.classList.remove('active');
@@ -1084,7 +1077,7 @@ class TaskApp {
 
     applyTheme(isLight) {
         document.body.classList.toggle('light-theme', isLight);
-        document.querySelector('meta[name="theme-color"]').content = isLight ? '#f8f9fa' : '#09090b';
+        document.querySelector('meta[name="theme-color"]').content = isLight ? '#f8f9fa' : '#555152';
         document.getElementById('themeToggleQuick').innerHTML = `<i class="ph ph-${isLight ? 'sun' : 'moon'}"></i>`;
     }
 
